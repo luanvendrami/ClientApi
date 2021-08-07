@@ -1,5 +1,7 @@
+using Infra.Data.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,6 +23,10 @@ namespace RegisterClient
         {
 
             services.AddControllers();
+
+            services.AddDbContext<MeuDbContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("BancoPrincipal")));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "RegisterClient", Version = "v1" });
