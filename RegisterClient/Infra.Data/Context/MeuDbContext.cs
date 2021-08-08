@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Entidades;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infra.Data.Context
 {
@@ -9,5 +10,7 @@ namespace Infra.Data.Context
         {
 
         }
+
+        public DbSet<ClientDto> Client { get; set; }
     }
 }
