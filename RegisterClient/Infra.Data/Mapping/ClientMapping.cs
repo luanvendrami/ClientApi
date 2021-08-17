@@ -15,7 +15,7 @@ namespace Infra.Data.Mapping
         {
             builder.HasKey(p => p.Id);
 
-            builder.ToTable("Enderecos");
+            builder.ToTable("Client");
 
             builder.Property(p => p.NomeCompleto)
                 .IsRequired()

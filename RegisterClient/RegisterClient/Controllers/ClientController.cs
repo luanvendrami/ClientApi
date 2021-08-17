@@ -1,18 +1,22 @@
 ﻿using Domain.Entidades;
 using Infra.Data.Context;
+using Infra.Data.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using System.Web.Http.Description;
 
 namespace RegisterClient.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Consumes("application/json")]
-    public class ClientController : Controller
+    public class ClientController : ControllerBase
     {
 
         private readonly MeuDbContext _contexto;
@@ -22,94 +26,97 @@ namespace RegisterClient.Controllers
             _contexto = contexto;
         }
 
-        // GET: ClientController
+        //[HttpGet]
+        //public IQueryable<ClientDto> GetClientOne()
+        //{
+        //    return _contexto.Client;
+        //}
+
         [HttpGet]
-        //[Route"/[controller]"]    
-        public IActionResult Index()
+        [ResponseType(typeof(ClientDto))]
+        public async Task<ActionResult> GetClient(int id)
         {
-
-            var one = new ClientDto();
-
-            one.Cep = "CepTeste";
-            one.Cpf = "Cpfteste";
-            one.DataNascimento = DateTime.Now;
-            one.Id = 1;
-            one.NomeCompleto = "Luan Vendrami";
-            one.Rg = "TesteRg";
-
-            _contexto.Add(one);
-            _contexto.SaveChanges();
-
-            return Ok(one);
+            ClientDto client = await _contexto.Client.FindAsync(id);
+            if (client == null)
+            {
+                return NotFound();
+            }
+            return Ok(client);
         }
 
-        //// GET: ClientController/Details/5
-        //public ActionResult Details(int id)
-        //{
-        //    return View();
-        //}
+        [HttpPut]
+        [ResponseType(typeof(void))]
+        public async Task<ActionResult> PutClient(int id, ClientDto client)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //// GET: ClientController/Create
-        //public ActionResult Create()
-        //{
-        //    return View();
-        //}
+            if (id != client.Id)
+            {
+                return BadRequest();
+            }
 
-        //// POST: ClientController/Create
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Create(IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
+            _contexto.Entry(client).State = EntityState.Modified;
 
-        //// GET: ClientController/Edit/5
-        //public ActionResult Edit(int id)
-        //{
-        //    return View();
-        //}
+            try
+            {
+                await _contexto.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
 
-        //// POST: ClientController/Edit/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit(int id, IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
+            return StatusCode((int)HttpStatusCode.NoContent);
+        }
 
-        //// GET: ClientController/Delete/5
-        //public ActionResult Delete(int id)
-        //{
-        //    return View();
-        //}
+        [HttpPost]
+        [ResponseType(typeof(ClientDto))]
+        public async Task<ActionResult> PostClient(ClientDto client)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //// POST: ClientController/Delete/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Delete(int id, IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
+            _contexto.Client.Add(client);
+
+            try
+            {
+                await _contexto.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return CreatedAtRoute("DefaultApi", new { id = client.Id }, client);
+        }
+
+        [HttpDelete]
+        [ResponseType(typeof(ClientDto))]
+        public async Task<ActionResult> DeleteClient(int id)
+        {
+            ClientDto client = await _contexto.Client.FindAsync(id);
+
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+            _contexto.Client.Remove(client);
+            try
+            {
+                await _contexto.SaveChangesAsync();
+            }
+            catch(Exception)
+            {
+                throw;
+            }
+
+            return Ok(client);
+        }
     }
 }

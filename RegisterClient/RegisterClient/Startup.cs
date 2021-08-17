@@ -31,6 +31,7 @@ namespace RegisterClient
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "RegisterClient", Version = "v1" });
+                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             });
         }
 
@@ -46,7 +47,7 @@ namespace RegisterClient
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API");
+                    c.SwaggerEndpoint("./v1/swagger.json", "API");
                 });
             }
 
