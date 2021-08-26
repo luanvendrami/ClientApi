@@ -1,3 +1,4 @@
+using Domain.Interfaces;
 using Infra.Data.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Services.Services;
 using System.Linq;
 
 namespace RegisterClient
@@ -24,6 +26,9 @@ namespace RegisterClient
         {
 
             services.AddControllers();
+
+            services.AddScoped<MeuDbContext>();
+            services.AddScoped<IClientService, ClientService>();
 
             services.AddDbContext<MeuDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("MeuDbContext")));
