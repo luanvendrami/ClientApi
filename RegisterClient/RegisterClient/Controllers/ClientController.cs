@@ -1,122 +1,141 @@
 ﻿using Domain.Entidades;
-using Infra.Data.Context;
-using Infra.Data.Repository;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
-using System.Web.Http.Description;
 
 namespace RegisterClient.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Produces("application/json")]
     public class ClientController : ControllerBase
     {
 
-        private readonly MeuDbContext _contexto;
+        private readonly IClientService _clientService;
 
-        public ClientController(MeuDbContext contexto)
+        public ClientController(IClientService clientService)
         {
-            _contexto = contexto;
+            _clientService = clientService;
         }
 
-        //[HttpGet]
-        //public IQueryable<ClientDto> GetClientOne()
-        //{
-        //    return _contexto.Client;
-        //}
 
+        //Return list Clients
         [HttpGet]
-        [ResponseType(typeof(ClientDto))]
-        public async Task<ActionResult> GetClient(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IAsyncEnumerable<ClientDto>>> GetClientList()
         {
-            ClientDto client = await _contexto.Client.FindAsync(id);
-            if (client == null)
-            {
-                return NotFound();
-            }
-            return Ok(client);
-        }
-
-        [HttpPut]
-        [ResponseType(typeof(void))]
-        public async Task<ActionResult> PutClient(int id, ClientDto client)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != client.Id)
-            {
-                return BadRequest();
-            }
-
-            _contexto.Entry(client).State = EntityState.Modified;
-
             try
             {
-                await _contexto.SaveChangesAsync();
+                var clients = await _clientService.GetClients();
+                return Ok(clients);
             }
-            catch (Exception)
+            catch
             {
-                throw;
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao obter aluno");
             }
-
-            return StatusCode((int)HttpStatusCode.NoContent);
         }
 
+        //Return Name Clients
+        [HttpGet("ClientName")]
+        public async Task<ActionResult<IAsyncEnumerable<ClientDto>>> GetClientByName([FromQuery] string nome)
+        {
+            try
+            {
+                var clients = await _clientService.GetClientByNome(nome);
+
+                if (clients == null)
+                    return NotFound($"Não existem alunos com o critério {nome}");
+
+                return Ok(clients);
+            }
+            catch
+            {
+                return BadRequest("Resquest inválido");
+            }
+        }
+
+        //Return Id Clients
+        [HttpGet("{id:int}", Name = "GetClientId")]
+        public async Task<ActionResult<ClientDto>> GetClientId(int id)
+        {
+            try
+            {
+                var clientId = await _clientService.GetClient(id);
+                if (clientId == null)
+                    return NotFound($"Não existem aluno com id: {id}");
+                return Ok(clientId);
+            }
+            catch
+            {
+                return BadRequest("Resquest inválido");
+            }
+        }
+
+        //Value created return of the last ClientId
         [HttpPost]
-        [ResponseType(typeof(ClientDto))]
-        public async Task<ActionResult> PostClient(ClientDto client)
+        public async Task<ActionResult> Create(ClientDto client)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            _contexto.Client.Add(client);
-
             try
             {
-                await _contexto.SaveChangesAsync();
+                await _clientService.CreateClient(client);
+                return CreatedAtRoute(nameof(GetClientId), new { id = client.Id }, client);
             }
-            catch (Exception)
+            catch
             {
-                throw;
+                return BadRequest("Resquest inválido");
             }
-
-            return CreatedAtRoute("DefaultApi", new { id = client.Id }, client);
         }
 
-        [HttpDelete]
-        [ResponseType(typeof(ClientDto))]
-        public async Task<ActionResult> DeleteClient(int id)
+        //Update client of the paste parameter Id
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> Edit(int id, [FromBody] ClientDto client)
         {
-            ClientDto client = await _contexto.Client.FindAsync(id);
-
-            if (client == null)
-            {
-                return NotFound();
-            }
-
-            _contexto.Client.Remove(client);
             try
             {
-                await _contexto.SaveChangesAsync();
-            }
-            catch(Exception)
-            {
-                throw;
-            }
+                if(client.Id == id)
+                {
+                    await _clientService.UpdateClient(client);
+                    return Ok($"Client com id: {id} foi atualizado com sucesso");
 
-            return Ok(client);
+                }
+                else
+                {
+                    return BadRequest("Dados inconsistentes");
+                }
+            }
+            catch 
+            {
+                return BadRequest("Resquest inválido"); ;
+            }
         }
+
+        //Delete Client of the ID
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                var client = await _clientService.GetClient(id);
+                if(client != null)
+                {
+                    await _clientService.DeleteClient(client);
+                    return Ok($"Client de id: {id} foi excluido com sucesso");
+                }
+                else
+                {
+                    return NotFound($"Client com id: {id} não encontrado");
+                }
+
+            }
+            catch
+            {
+                return BadRequest("Resquest inválido"); ;
+            }
+        }
+
     }
 }
