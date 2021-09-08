@@ -9,11 +9,7 @@ namespace Domain.Interfaces
 {
     public interface IClientService
     {
-        Task<IEnumerable<ClientDto>> GetClients();
-        Task<ClientDto> GetClient(int id);
-        Task<IEnumerable<ClientDto>> GetClientByNome(string nome);
-        Task CreateClient(ClientDto client);
-        Task UpdateClient(ClientDto client);
-        Task DeleteClient(ClientDto client);
+        IEnumerable<ClientEntcs> RetornoLista();
+        void Salvar(ClientDto dto);
     }
 }

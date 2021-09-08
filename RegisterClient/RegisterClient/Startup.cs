@@ -1,5 +1,6 @@
 using Domain.Interfaces;
 using Infra.Data.Context;
+using Infra.Data.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -28,10 +29,13 @@ namespace RegisterClient
             services.AddControllers();
 
             services.AddScoped<MeuDbContext>();
+            services.AddScoped<IClienteRepository, ClientRepository>();
             services.AddScoped<IClientService, ClientService>();
+            
 
             services.AddDbContext<MeuDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("MeuDbContext")));
+
 
             services.AddSwaggerGen(c =>
             {
