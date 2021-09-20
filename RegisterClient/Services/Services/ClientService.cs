@@ -1,13 +1,6 @@
 ﻿using Domain.Entidades;
 using Domain.Interfaces;
-using Infra.Data.Context;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.Services
 {
@@ -25,68 +18,51 @@ namespace Services.Services
         {
             return _clienteRepository.RetornaClientes();
         }
-
-        public void Salvar(ClientDto dto)
+        public IEnumerable<ClientEntcs> RetornaListaNomes(string nome)
         {
-            var cliente = new ClientEntcs(dto.NomeCompleto, dto.Cpf, dto.Rg, dto.DataNascimento, dto.Cep);
-            //foreach (var item in cliente.Telefones)
-            //{
+            return _clienteRepository.RetornaNomeCliente(nome);
+        }
 
-            //}
-            cliente.Validar();
-            cliente.Adulto();
-            //cliente.AdicionarTelefone("333");
+        public ClientEntcs RetornaIdCliente(int id)
+        {
+            return _clienteRepository.RetornaClientId(id);
+        }
+
+        public void SalvarCliente(ClientDto dto)
+        {
+            var cliente = new ClientEntcs();
+            cliente.NomeCompleto = dto.NomeCompleto;
+            cliente.Cpf = dto.Cpf;
+            cliente.Rg = dto.Rg;
+            cliente.DataNascimento = dto.DataNascimento;
+            cliente.Cep = dto.Cep;
+
             _clienteRepository.Adicionar(cliente);
         }
 
-        //public async Task<IEnumerable<ClientDto>> GetClients()
-        //{
-        //    try
-        //    {
-        //        return await _context.Client.ToListAsync();
-        //    }
-        //    catch
-        //    {
-        //        throw;
-        //    }
-        //}
+        public void Atualizar(ClientDto dto)
+        {
+            var cliente = new ClientEntcs();
+            cliente.NomeCompleto = dto.NomeCompleto;
+            cliente.Cpf = dto.Cpf;
+            cliente.Rg = dto.Rg;
+            cliente.DataNascimento = dto.DataNascimento;
+            cliente.Cep = dto.Cep;
 
-        //public async Task<IEnumerable<ClientDto>> GetClientByNome(string nome)
-        //{
-        //    IEnumerable<ClientDto> clients;
-        //    if (!string.IsNullOrWhiteSpace(nome))
-        //    {
-        //        clients = await _context.Client.Where(n => n.NomeCompleto.Contains(nome)).ToListAsync();
-        //    }
-        //    else
-        //    {
-        //        clients = await GetClients();
-        //    }
-        //    return clients;
-        //}
+            _clienteRepository.Atualizar(cliente);
+        }
 
-        //public async Task<ClientDto> GetClient(int id)
-        //{
-        //    var client = await _context.Client.FindAsync(id);
-        //    return client;
-        //}
-
-        //public async Task CreateClient(ClientDto client)
-        //{
-        //    _context.Client.Add(client);
-        //    await _context.SaveChangesAsync();
-        //}
-
-        //public async Task UpdateClient(ClientDto client)
-        //{
-        //    _context.Entry(client).State = EntityState.Modified;
-        //    await _context.SaveChangesAsync();
-        //}
-
-        //public async Task DeleteClient(ClientDto client)
-        //{
-        //    _context.Client.Remove(client);
-        //    await _context.SaveChangesAsync();
-        //}  
+        public bool DeletarCliente(int id)
+        {
+            try
+            {
+                _clienteRepository.Remover(id);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

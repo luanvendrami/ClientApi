@@ -8,12 +8,12 @@ namespace Domain.Entidades
 {
     public class ClientEntcs
     {
-        public int Id { get; private set; }
-        public string NomeCompleto { get; private set; }
-        public string Cpf { get; private set; }
-        public string Rg { get; private set; }
-        public DateTime DataNascimento { get; private set; }
-        public string Cep { get; private set; }
+        public int Id { get; set; }
+        public string NomeCompleto { get; set; }
+        public string Cpf { get; set; }
+        public string Rg { get; set; }
+        public DateTime DataNascimento { get; set; }
+        public string Cep { get; set; }
         //public List<string> Telefones { get; private set; }
 
         public void Validar()
@@ -34,22 +34,14 @@ namespace Domain.Entidades
             return true;
         }
 
-        //public void AdicionarTelefone(string telefone)
-        //{
-        //    if(Telefones == null)
-        //    {
-        //        Telefones = new List<string>();
-        //    }
-        //    Telefones.Add(telefone);
-        //}
-
         public ClientEntcs(string nomeCompleto, string cpf, string rg, DateTime dataNascimento, string cep)
         {
             NomeCompleto = nomeCompleto;
             Cpf = cpf;
             Rg = rg;
             DataNascimento = dataNascimento;
-            Cep = cep;         
+            Cep = cep;
+            Validar();
         }
 
         public ClientEntcs()

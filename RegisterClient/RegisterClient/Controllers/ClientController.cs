@@ -45,113 +45,78 @@ namespace RegisterClient.Controllers
         {
             try
             {
-                _clientService.Salvar(clientDto);
+                _clientService.SalvarCliente(clientDto);
                 return Ok();
             }
-            catch (Exception ex)
+            catch 
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return BadRequest("Dados inválidos, tenta novamente.");
             }
-            
+
         }
 
-        //Return Name Clients
-        //[HttpGet("ClientName")]
-        //public async Task<ActionResult<IAsyncEnumerable<ClientDto>>> GetClientByName([FromQuery] string nome)
-        //{
-        //    try
-        //    {
-        //        var clients = await _clientService.GetClientByNome(nome);
+        [HttpGet("ClienteNome")]
+        public ActionResult<IEnumerable<ClientEntcs>> RetornaListaPorNome(string nome)
+        {
+            try
+            {
+                var retorno = _clientService.RetornaListaNomes(nome);
+                if (retorno == null)
+                    return NotFound($"Não existem alunos com o critério {nome}");
+                return Ok(retorno);
+            }
+            catch
+            {
+                return BadRequest("Resquest inválido");
+            }
+        }
 
-        //        if (clients == null)
-        //            return NotFound($"Não existem alunos com o critério {nome}");
+        [HttpGet("{id:int}", Name = "RetornoClienteId")]
+        public ActionResult<ClientEntcs> ClientePorId(int id)
+        {
+            try
+            {
+                var retorno = _clientService.RetornaIdCliente(id);
+                if (retorno == null)
+                    return NotFound($"Não existem alunos com o critério {id}");
+                return Ok(retorno);
+            }
+            catch
+            {
+                return BadRequest("Resquest inválido");
+            }
+        }
 
-        //        return Ok(clients);
-        //    }
-        //    catch
-        //    {
-        //        return BadRequest("Resquest inválido");
-        //    }
-        //}
 
-        ////Return Id Clients
-        //[HttpGet("{id:int}", Name = "GetClientId")]
-        //public async Task<ActionResult<ClientDto>> GetClientId(int id)
-        //{
-        //    try
-        //    {
-        //        var clientId = await _clientService.GetClient(id);
-        //        if (clientId == null)
-        //            return NotFound($"Não existem aluno com id: {id}");
-        //        return Ok(clientId);
-        //    }
-        //    catch
-        //    {
-        //        return BadRequest("Resquest inválido");
-        //    }
-        //}
+        [HttpPut("AtualizarCliente")]
+        public ActionResult Atualizar([FromBody] ClientDto client)
+        {
+            try
+            {
+                if (client != null)
+                    _clientService.SalvarCliente(client);
+                return Ok($"Client foi atualizado com sucesso");
+            }
+            catch
+            {
+                return BadRequest("Dados inconsistentes");
+            }
+        }
 
-        ////Value created return of the last ClientId
-        //[HttpPost]
-        //public async Task<ActionResult> Create(ClientDto client)
-        //{
-        //    try
-        //    {
-        //        await _clientService.CreateClient(client);
-        //        return CreatedAtRoute(nameof(GetClientId), new { id = client.Id }, client);
-        //    }
-        //    catch
-        //    {
-        //        return BadRequest("Resquest inválido");
-        //    }
-        //}
-
-        ////Update client of the paste parameter Id
-        //[HttpPut("{id:int}")]
-        //public async Task<ActionResult> Edit(int id, [FromBody] ClientDto client)
-        //{
-        //    try
-        //    {
-        //        if(client.Id == id)
-        //        {
-        //            await _clientService.UpdateClient(client);
-        //            return Ok($"Client com id: {id} foi atualizado com sucesso");
-
-        //        }
-        //        else
-        //        {
-        //            return BadRequest("Dados inconsistentes");
-        //        }
-        //    }
-        //    catch 
-        //    {
-        //        return BadRequest("Resquest inválido"); ;
-        //    }
-        //}
-
-        ////Delete Client of the ID
-        //[HttpDelete("{id:int}")]
-        //public async Task<ActionResult> Delete(int id)
-        //{
-        //    try
-        //    {
-        //        var client = await _clientService.GetClient(id);
-        //        if(client != null)
-        //        {
-        //            await _clientService.DeleteClient(client);
-        //            return Ok($"Client de id: {id} foi excluido com sucesso");
-        //        }
-        //        else
-        //        {
-        //            return NotFound($"Client com id: {id} não encontrado");
-        //        }
-
-        //    }
-        //    catch
-        //    {
-        //        return BadRequest("Resquest inválido"); ;
-        //    }
-        //}
-
+        [HttpDelete("{id:int}")]
+        public ActionResult Delete(int id)
+        {
+            try
+            {
+                var retorno = _clientService.DeletarCliente(id);
+                if(retorno != false)
+                    return Ok($"Client com id: {id} foi excluido com sucesso");
+            }
+            catch
+            {
+                return NotFound($"Client com id: {id} não encontrado");
+            }
+            return NotFound($"Client com id: {id} não encontrado");
+        }
     }
 }

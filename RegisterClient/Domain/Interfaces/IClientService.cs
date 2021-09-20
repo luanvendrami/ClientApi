@@ -10,6 +10,9 @@ namespace Domain.Interfaces
     public interface IClientService
     {
         IEnumerable<ClientEntcs> RetornoLista();
-        void Salvar(ClientDto dto);
+        void SalvarCliente(ClientDto dto);
+        IEnumerable<ClientEntcs> RetornaListaNomes(string nome);
+        ClientEntcs RetornaIdCliente(int id);
+        bool DeletarCliente(int id);
     }
 }
