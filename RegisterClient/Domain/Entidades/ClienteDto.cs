@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entidades
 {
-    public class ClientEntcs
+    public class ClienteDto
     {
         public int Id { get; set; }
         public string NomeCompleto { get; set; }
@@ -34,7 +34,7 @@ namespace Domain.Entidades
             return true;
         }
 
-        public ClientEntcs(string nomeCompleto, string cpf, string rg, DateTime dataNascimento, string cep)
+        public ClienteDto(string nomeCompleto, string cpf, string rg, DateTime dataNascimento, string cep)
         {
             NomeCompleto = nomeCompleto;
             Cpf = cpf;
@@ -44,7 +44,7 @@ namespace Domain.Entidades
             Validar();
         }
 
-        public ClientEntcs()
+        public ClienteDto()
         {
 
         }

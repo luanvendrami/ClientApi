@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infra.Data.Repository
+namespace Infra.Data.Repository.BaseRepositorio
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, new()
     {

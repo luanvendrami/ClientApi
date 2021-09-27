@@ -10,6 +10,6 @@ namespace Infra.Data.Context
         {
 
         }
-        public DbSet<ClientEntcs> Client { get; set; }
+        public DbSet<ClienteEntidade> Cliente { get; set; }
     }
 }

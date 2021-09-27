@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace Infra.Data.Mapping
 {
-    public class ClientMapping : IEntityTypeConfiguration<ClientDto>
+    public class ClienteMapeamento : IEntityTypeConfiguration<ClienteEntidade>
     {
-        public void Configure(EntityTypeBuilder<ClientDto> builder)
+        public void Configure(EntityTypeBuilder<ClienteEntidade> builder)
         {
             builder.HasKey(p => p.Id);
 
-            builder.ToTable("Client");
+            builder.ToTable("Cliente");
 
             builder.Property(p => p.NomeCompleto)
                 .IsRequired()
@@ -32,10 +32,6 @@ namespace Infra.Data.Mapping
             builder.Property(p => p.DataNascimento)
                 .IsRequired()
                 .HasColumnType("datetime");
-
-            builder.Property(p => p.Cep)
-                .IsRequired()
-                .HasColumnType("varchar(8)");
         }
     }
 }

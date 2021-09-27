@@ -1,11 +1,9 @@
 ﻿using Domain.Entidades;
-using Domain.Interfaces;
+using Domain.Interfaces.ClienteInterface.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace RegisterClient.Controllers
 {
@@ -15,9 +13,9 @@ namespace RegisterClient.Controllers
     public class ClientController : ControllerBase
     {
 
-        private readonly IClientService _clientService;
+        private readonly IClienteService _clientService;
 
-        public ClientController(IClientService clientService)
+        public ClientController(IClienteService clientService)
         {
             _clientService = clientService;
         }
@@ -27,7 +25,7 @@ namespace RegisterClient.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<IEnumerable<ClientEntcs>> GetClientList()
+        public ActionResult<IEnumerable<ClienteDto>> GetClientList()
         {
             try
             {
@@ -41,7 +39,7 @@ namespace RegisterClient.Controllers
         }
 
         [HttpPost]
-        public ActionResult Salvar(ClientDto clientDto)
+        public ActionResult Salvar(ClienteDto clientDto)
         {
             try
             {
@@ -56,7 +54,7 @@ namespace RegisterClient.Controllers
         }
 
         [HttpGet("ClienteNome")]
-        public ActionResult<IEnumerable<ClientEntcs>> RetornaListaPorNome(string nome)
+        public ActionResult<IEnumerable<ClienteDto>> RetornaListaPorNome(string nome)
         {
             try
             {
@@ -72,7 +70,7 @@ namespace RegisterClient.Controllers
         }
 
         [HttpGet("{id:int}", Name = "RetornoClienteId")]
-        public ActionResult<ClientEntcs> ClientePorId(int id)
+        public ActionResult<ClienteDto> ClientePorId(int id)
         {
             try
             {
@@ -89,7 +87,7 @@ namespace RegisterClient.Controllers
 
 
         [HttpPut("AtualizarCliente")]
-        public ActionResult Atualizar([FromBody] ClientDto client)
+        public ActionResult Atualizar([FromBody] ClienteDto client)
         {
             try
             {

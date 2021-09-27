@@ -1,6 +1,9 @@
 using Domain.Interfaces;
+using Domain.Interfaces.ClienteInterface.Repositorio;
+using Domain.Interfaces.ClienteInterface.Service;
 using Infra.Data.Context;
 using Infra.Data.Repository;
+using Infra.Data.Repository.ClienteRepositorio;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -29,8 +32,8 @@ namespace RegisterClient
             services.AddControllers();
 
             services.AddScoped<MeuDbContext>();
-            services.AddScoped<IClienteRepository, ClientRepository>();
-            services.AddScoped<IClientService, ClientService>();
+            services.AddScoped<IClienteRepositorio, ClienteRepositorio>();
+            services.AddScoped<IClienteService, ClienteService>();
             
 
             services.AddDbContext<MeuDbContext>(options =>

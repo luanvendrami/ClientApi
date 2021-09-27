@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entidades
 {
-    public class ClientDto
+    public class ClienteEntidade
     {
         public int Id { get; set; }
         public string NomeCompleto { get; set; }
