@@ -12,9 +12,7 @@ To run the project it is necessary:
 
 
 # Build and Test
-TODO: Describe and show how to build your code and run the tests. 
-
-# Contribute
 It is possible to build in an ISS model, in this api the queries are made in a local database, so for you to take better advantage of the application, it is suggested to use its "connectionString" to perform tests.Please check appsettings.json and change.
 
+# Contribute
 Thanks for checking my application, please if there are any suggestions for improving the code or questions, I'm available!
