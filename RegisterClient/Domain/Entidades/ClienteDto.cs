@@ -14,7 +14,6 @@ namespace Domain.Entidades
         public string Rg { get; set; }
         public DateTime DataNascimento { get; set; }
         public string Cep { get; set; }
-        //public List<string> Telefones { get; private set; }
 
         public void Validar()
         {
@@ -27,11 +26,6 @@ namespace Domain.Entidades
             {
                 throw new ArgumentNullException("Não pode ser vazio");
             }
-        }
-
-        public bool Adulto()
-        {
-            return true;
         }
 
         public ClienteDto(string nomeCompleto, string cpf, string rg, DateTime dataNascimento, string cep)
